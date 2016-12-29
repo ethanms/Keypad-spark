@@ -1,6 +1,6 @@
 /*
 ||
-|| @file Keypad.h
+|| @file MyKeypad.h
 || @version 3.1
 || @author Mark Stanley, Alexander Brevig
 || @contact mstanley@technologist.com, alexanderbrevig@gmail.com
@@ -30,10 +30,10 @@
 ||
 */
 
-#ifndef KEYPAD_H
-#define KEYPAD_H
+#ifndef MYKEYPAD_H
+#define MYKEYPAD_H
 
-#include "Key.h"
+#include "MyKey.h"
 
 #include "application.h"
 
@@ -45,7 +45,7 @@
 #define bitClear(value, bit) ((value) &= ~(1UL << (bit)))
 #define bitWrite(value, bit, bitvalue) (bitvalue ? bitSet(value, bit) : bitClear(value, bit))
 
-typedef char KeypadEvent;
+typedef char MyKeypadEvent;
 typedef unsigned int uint;
 typedef unsigned long ulong;
 
@@ -54,55 +54,55 @@ typedef unsigned long ulong;
 typedef struct {
     byte rows;
     byte columns;
-} KeypadSize;
+} MyKeypadSize;
 
 #define LIST_MAX 10		// Max number of keys on the active list.
 #define MAPSIZE 10		// MAPSIZE is the number of rows (times 16 columns)
-#define makeKeymap(x) ((char*)x)
+#define makeMyKeymap(x) ((char*)x)
 
 
-//class Keypad : public Key, public HAL_obj {
-class Keypad : public Key {
+//class MyKeypad : public MyKey, public HAL_obj {
+class MyKeypad : public MyKey {
 public:
 
-	Keypad(char *userKeymap, byte *row, byte *col, byte numRows, byte numCols);
+	MyKeypad(char *userMyKeymap, byte *row, byte *col, byte numRows, byte numCols);
 
 	virtual void pin_mode(byte pinNum, PinMode mode) { pinMode(pinNum, mode); }
 	virtual void pin_write(byte pinNum, boolean level) { digitalWrite(pinNum, level); }
 	virtual int  pin_read(byte pinNum) { return digitalRead(pinNum); }
 
 	uint bitMap[MAPSIZE];	// 10 row x 16 column array of bits. Except Due which has 32 columns.
-	Key key[LIST_MAX];
+	MyKey key[LIST_MAX];
 	unsigned long holdTimer;
 
-	char getKey();
-	bool getKeys();
-	KeyState getState();
-	void begin(char *userKeymap);
+	char getMyKey();
+	bool getMyKeys();
+	MyKeyState getState();
+	void begin(char *userMyKeymap);
 	bool isPressed(char keyChar);
 	void setDebounceTime(uint);
 	void setHoldTime(uint);
 	void addEventListener(void (*listener)(char));
 	int findInList(char keyChar);
 	int findInList(int keyCode);
-	char waitForKey();
+	char waitForMyKey();
 	bool keyStateChanged();
-	byte numKeys();
+	byte numMyKeys();
 
 private:
 	unsigned long startTime;
 	char *keymap;
     byte *rowPins;
     byte *columnPins;
-	KeypadSize sizeKpd;
+	MyKeypadSize sizeKpd;
 	uint debounceTime;
 	uint holdTime;
 	bool single_key;
 
-	void scanKeys();
+	void scanMyKeys();
 	bool updateList();
-	void nextKeyState(byte n, boolean button);
-	void transitionTo(byte n, KeyState nextState);
+	void nextMyKeyState(byte n, boolean button);
+	void transitionTo(byte n, MyKeyState nextState);
 	void (*keypadEventListener)(char);
 };
 
@@ -110,15 +110,16 @@ private:
 
 /*
 || @changelog
+|| | 3.2 2016-12-29 - Ethan Schwartz   : Changed from Key to MyKey to prevent conflict with Particle Electron
 || | 3.1 2013-01-15 - Mark Stanley     : Fixed missing RELEASED & IDLE status when using a single key.
 || | 3.0 2012-07-12 - Mark Stanley     : Made library multi-keypress by default. (Backwards compatible)
-|| | 3.0 2012-07-12 - Mark Stanley     : Modified pin functions to support Keypad_I2C
+|| | 3.0 2012-07-12 - Mark Stanley     : Modified pin functions to support MyKeypad_I2C
 || | 3.0 2012-07-12 - Stanley & Young  : Removed static variables. Fix for multiple keypad objects.
 || | 3.0 2012-07-12 - Mark Stanley     : Fixed bug that caused shorted pins when pressing multiple keys.
-|| | 2.0 2011-12-29 - Mark Stanley     : Added waitForKey().
+|| | 2.0 2011-12-29 - Mark Stanley     : Added waitForMyKey().
 || | 2.0 2011-12-23 - Mark Stanley     : Added the public function keyStateChanged().
-|| | 2.0 2011-12-23 - Mark Stanley     : Added the private function scanKeys().
-|| | 2.0 2011-12-23 - Mark Stanley     : Moved the Finite State Machine into the function getKeyState().
+|| | 2.0 2011-12-23 - Mark Stanley     : Added the private function scanMyKeys().
+|| | 2.0 2011-12-23 - Mark Stanley     : Moved the Finite State Machine into the function getMyKeyState().
 || | 2.0 2011-12-23 - Mark Stanley     : Removed the member variable lastUdate. Not needed after rewrite.
 || | 1.8 2011-11-21 - Mark Stanley     : Added test to determine which header file to compile,
 || |                                          WProgram.h or Arduino.h.
@@ -132,7 +133,7 @@ private:
 || | 1.5 2009-05-19 - Alexander Brevig : Added setHoldTime()
 || | 1.4 2009-05-15 - Alexander Brevig : Added addEventListener
 || | 1.3 2009-05-12 - Alexander Brevig : Added lastUdate, in order to do simple debouncing
-|| | 1.2 2009-05-09 - Alexander Brevig : Changed getKey()
+|| | 1.2 2009-05-09 - Alexander Brevig : Changed getMyKey()
 || | 1.1 2009-04-28 - Alexander Brevig : Modified API, and made variables private
 || | 1.0 2007-XX-XX - Mark Stanley : Initial Release
 || #
