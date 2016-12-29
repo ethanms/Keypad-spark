@@ -1,6 +1,6 @@
 /*
 ||
-|| @file Keypad.cpp
+|| @file MyKeypad.cpp
 || @version 3.1
 || @author Mark Stanley, Alexander Brevig
 || @contact mstanley@technologist.com, alexanderbrevig@gmail.com
@@ -29,16 +29,16 @@
 || #
 ||
 */
-#include "Keypad.h"
+#include "MyKeypad.h"
 
 // <<constructor>> Allows custom keymap, pin configuration, and keypad sizes.
-Keypad::Keypad(char *userKeymap, byte *row, byte *col, byte numRows, byte numCols) {
+MyKeypad::MyKeypad(char *userMyKeymap, byte *row, byte *col, byte numRows, byte numCols) {
 	rowPins = row;
 	columnPins = col;
 	sizeKpd.rows = numRows;
 	sizeKpd.columns = numCols;
 
-	begin(userKeymap);
+	begin(userMyKeymap);
 
 	setDebounceTime(10);
 	setHoldTime(500);
@@ -49,15 +49,15 @@ Keypad::Keypad(char *userKeymap, byte *row, byte *col, byte numRows, byte numCol
 }
 
 // Let the user define a keymap - assume the same row/column count as defined in constructor
-void Keypad::begin(char *userKeymap) {
-    keymap = userKeymap;
+void MyKeypad::begin(char *userMyKeymap) {
+    keymap = userMyKeymap;
 }
 
 // Returns a single key only. Retained for backwards compatibility.
-char Keypad::getKey() {
+char MyKeypad::getMyKey() {
 	single_key = true;
 
-	if (getKeys() && key[0].stateChanged && (key[0].kstate==PRESSED))
+	if (getMyKeys() && key[0].stateChanged && (key[0].kstate==PRESSED))
 		return key[0].kchar;
 	
 	single_key = false;
@@ -66,12 +66,12 @@ char Keypad::getKey() {
 }
 
 // Populate the key list.
-bool Keypad::getKeys() {
+bool MyKeypad::getMyKeys() {
 	bool keyActivity = false;
 
 	// Limit how often the keypad is scanned. This makes the loop() run 10 times as fast.
 	if ( (millis()-startTime)>debounceTime ) {
-		scanKeys();
+		scanMyKeys();
 		keyActivity = updateList();
 		startTime = millis();
 	}
@@ -80,7 +80,7 @@ bool Keypad::getKeys() {
 }
 
 // Private : Hardware scan
-void Keypad::scanKeys() {
+void MyKeypad::scanMyKeys() {
 	// Re-intialize the row pins. Allows sharing these pins with other hardware.
 	for (byte r=0; r<sizeKpd.rows; r++) {
 		pin_mode(rowPins[r],INPUT_PULLUP);
@@ -100,7 +100,7 @@ void Keypad::scanKeys() {
 }
 
 // Manage the list without rearranging the keys. Returns true if any keys on the list changed state.
-bool Keypad::updateList() {
+bool MyKeypad::updateList() {
 
 	bool anyActivity = false;
 
@@ -120,18 +120,18 @@ bool Keypad::updateList() {
 			char keyChar = keymap[r * sizeKpd.columns + c];
 			int keyCode = r * sizeKpd.columns + c;
 			int idx = findInList (keyCode);
-			// Key is already on the list so set its next state.
+			// MyKey is already on the list so set its next state.
 			if (idx > -1)	{
-				nextKeyState(idx, button);
+				nextMyKeyState(idx, button);
 			}
-			// Key is NOT on the list so add it.
+			// MyKey is NOT on the list so add it.
 			if ((idx == -1) && button) {
 				for (byte i=0; i<LIST_MAX; i++) {
 					if (key[i].kchar==NO_KEY) {		// Find an empty slot or don't add key to list.
 						key[i].kchar = keyChar;
 						key[i].kcode = keyCode;
-						key[i].kstate = IDLE;		// Keys NOT on the list have an initial state of IDLE.
-						nextKeyState (i, button);
+						key[i].kstate = IDLE;		// MyKeys NOT on the list have an initial state of IDLE.
+						nextMyKeyState (i, button);
 						break;	// Don't fill all the empty slots with the same key.
 					}
 				}
@@ -149,7 +149,7 @@ bool Keypad::updateList() {
 
 // Private
 // This function is a state machine but is also used for debouncing the keys.
-void Keypad::nextKeyState(byte idx, boolean button) {
+void MyKeypad::nextMyKeyState(byte idx, boolean button) {
 	key[idx].stateChanged = false;
 
 	switch (key[idx].kstate) {
@@ -175,7 +175,7 @@ void Keypad::nextKeyState(byte idx, boolean button) {
 }
 
 // New in 2.1
-bool Keypad::isPressed(char keyChar) {
+bool MyKeypad::isPressed(char keyChar) {
 	for (byte i=0; i<LIST_MAX; i++) {
 		if ( key[i].kchar == keyChar ) {
 			if ( (key[i].kstate == PRESSED) && key[i].stateChanged )
@@ -187,7 +187,7 @@ bool Keypad::isPressed(char keyChar) {
 
 // Search by character for a key in the list of active keys.
 // Returns -1 if not found or the index into the list of active keys.
-int Keypad::findInList (char keyChar) {
+int MyKeypad::findInList (char keyChar) {
 	for (byte i=0; i<LIST_MAX; i++) {
 		if (key[i].kchar == keyChar) {
 			return i;
@@ -198,7 +198,7 @@ int Keypad::findInList (char keyChar) {
 
 // Search by code for a key in the list of active keys.
 // Returns -1 if not found or the index into the list of active keys.
-int Keypad::findInList (int keyCode) {
+int MyKeypad::findInList (int keyCode) {
 	for (byte i=0; i<LIST_MAX; i++) {
 		if (key[i].kcode == keyCode) {
 			return i;
@@ -208,54 +208,54 @@ int Keypad::findInList (int keyCode) {
 }
 
 // New in 2.0
-char Keypad::waitForKey() {
-	char waitKey = NO_KEY;
-	while( (waitKey = getKey()) == NO_KEY );	// Block everything while waiting for a keypress.
-	return waitKey;
+char MyKeypad::waitForMyKey() {
+	char waitMyKey = NO_KEY;
+	while( (waitMyKey = getMyKey()) == NO_KEY );	// Block everything while waiting for a keypress.
+	return waitMyKey;
 }
 
 // Backwards compatibility function.
-KeyState Keypad::getState() {
+MyKeyState MyKeypad::getState() {
 	return key[0].kstate;
 }
 
 // The end user can test for any changes in state before deciding
 // if any variables, etc. needs to be updated in their code.
-bool Keypad::keyStateChanged() {
+bool MyKeypad::keyStateChanged() {
 	return key[0].stateChanged;
 }
 
 // The number of keys on the key list, key[LIST_MAX], equals the number
-// of bytes in the key list divided by the number of bytes in a Key object.
-byte Keypad::numKeys() {
-	return sizeof(key)/sizeof(Key);
+// of bytes in the key list divided by the number of bytes in a MyKey object.
+byte MyKeypad::numMyKeys() {
+	return sizeof(key)/sizeof(MyKey);
 }
 
 // Minimum debounceTime is 1 mS. Any lower *will* slow down the loop().
-void Keypad::setDebounceTime(uint debounce) {
+void MyKeypad::setDebounceTime(uint debounce) {
 	debounce<1 ? debounceTime=1 : debounceTime=debounce;
 }
 
-void Keypad::setHoldTime(uint hold) {
+void MyKeypad::setHoldTime(uint hold) {
     holdTime = hold;
 }
 
-void Keypad::addEventListener(void (*listener)(char)){
+void MyKeypad::addEventListener(void (*listener)(char)){
 	keypadEventListener = listener;
 }
 
-void Keypad::transitionTo(byte idx, KeyState nextState) {
+void MyKeypad::transitionTo(byte idx, MyKeyState nextState) {
 	key[idx].kstate = nextState;
 	key[idx].stateChanged = true;
 
-	// Sketch used the getKey() function.
+	// Sketch used the getMyKey() function.
 	// Calls keypadEventListener only when the first key in slot 0 changes state.
 	if (single_key)  {
 	  	if ( (keypadEventListener!=NULL) && (idx==0) )  {
 			keypadEventListener(key[0].kchar);
 		}
 	}
-	// Sketch used the getKeys() function.
+	// Sketch used the getMyKeys() function.
 	// Calls keypadEventListener on any key that changes state.
 	else {
 	  	if (keypadEventListener!=NULL)  {
@@ -266,15 +266,16 @@ void Keypad::transitionTo(byte idx, KeyState nextState) {
 
 /*
 || @changelog
+|| | 3.2 2016-12-29 - Ethan Schwartz   : Modified from Key to MyKey to prevent conflict with Particle Electron
 || | 3.1 2013-01-15 - Mark Stanley     : Fixed missing RELEASED & IDLE status when using a single key.
 || | 3.0 2012-07-12 - Mark Stanley     : Made library multi-keypress by default. (Backwards compatible)
-|| | 3.0 2012-07-12 - Mark Stanley     : Modified pin functions to support Keypad_I2C
+|| | 3.0 2012-07-12 - Mark Stanley     : Modified pin functions to support MyKeypad_I2C
 || | 3.0 2012-07-12 - Stanley & Young  : Removed static variables. Fix for multiple keypad objects.
 || | 3.0 2012-07-12 - Mark Stanley     : Fixed bug that caused shorted pins when pressing multiple keys.
-|| | 2.0 2011-12-29 - Mark Stanley     : Added waitForKey().
+|| | 2.0 2011-12-29 - Mark Stanley     : Added waitForMyKey().
 || | 2.0 2011-12-23 - Mark Stanley     : Added the public function keyStateChanged().
-|| | 2.0 2011-12-23 - Mark Stanley     : Added the private function scanKeys().
-|| | 2.0 2011-12-23 - Mark Stanley     : Moved the Finite State Machine into the function getKeyState().
+|| | 2.0 2011-12-23 - Mark Stanley     : Added the private function scanMyKeys().
+|| | 2.0 2011-12-23 - Mark Stanley     : Moved the Finite State Machine into the function getMyKeyState().
 || | 2.0 2011-12-23 - Mark Stanley     : Removed the member variable lastUdate. Not needed after rewrite.
 || | 1.8 2011-11-21 - Mark Stanley     : Added decision logic to compile WProgram.h or Arduino.h
 || | 1.8 2009-07-08 - Alexander Brevig : No longer uses arrays
@@ -286,7 +287,7 @@ void Keypad::transitionTo(byte idx, KeyState nextState) {
 || | 1.5 2009-05-19 - Alexander Brevig : Added setHoldTime()
 || | 1.4 2009-05-15 - Alexander Brevig : Added addEventListener
 || | 1.3 2009-05-12 - Alexander Brevig : Added lastUdate, in order to do simple debouncing
-|| | 1.2 2009-05-09 - Alexander Brevig : Changed getKey()
+|| | 1.2 2009-05-09 - Alexander Brevig : Changed getMyKey()
 || | 1.1 2009-04-28 - Alexander Brevig : Modified API, and made variables private
 || | 1.0 2007-XX-XX - Mark Stanley : Initial Release
 || #
