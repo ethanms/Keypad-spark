@@ -1,4 +1,4 @@
-/* @file MultiKey.ino
+/* @file MultiMyKey.ino
 || @version 1.0
 || @author Mark Stanley
 || @contact mstanley@technologist.com
@@ -11,7 +11,7 @@
 || #
 */
 
-#include "Keypad/Keypad.h"
+#include "MyKeypad/MyKeypad.h"
 
 const byte ROWS = 4; //four rows
 const byte COLS = 3; //three columns
@@ -24,7 +24,7 @@ char keys[ROWS][COLS] = {
 byte rowPins[ROWS] = {D3, D2, D1, D0}; //connect to the row pinouts of the keypad
 byte colPins[COLS] = {D6, D5, D4}; //connect to the column pinouts of the keypad
 
-Keypad kpd = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+MyKeypad kpd = MyKeypad( makeMyKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 unsigned long loopCount;
 unsigned long startTime;
@@ -50,7 +50,7 @@ void loop() {
 
     // Fills kpd.key[ ] array with up-to 10 active keys.
     // Returns true if there are ANY active keys.
-    if (kpd.getKeys())
+    if (kpd.getMyKeys())
     {
         for (int i=0; i<LIST_MAX; i++)   // Scan the whole key list.
         {
@@ -69,7 +69,7 @@ void loop() {
                     case IDLE:
                     msg = " IDLE.";
                 }
-                Serial.print("Key ");
+                Serial.print("MyKey ");
                 Serial.print(kpd.key[i].kchar);
                 Serial.println(msg);
             }
