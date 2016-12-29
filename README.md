@@ -1,4 +1,4 @@
-Keypad-spark
+MyKeypad-spark
 ============
 
-The Arduino Keypad library ported to Spark Core
+The Arduino Keypad library ported to Spark Core (and modified for Electron)
