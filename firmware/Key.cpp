@@ -1,11 +1,11 @@
 /*
-|| @file Key.cpp
+|| @file MyKey.cpp
 || @version 1.0
 || @author Mark Stanley
 || @contact mstanley@technologist.com
 ||
 || @description
-|| | Key class provides an abstract definition of a key or button
+|| | MyKey class provides an abstract definition of a key or button
 || | and was initially designed to be used in conjunction with a
 || | state-machine.
 || #
@@ -27,27 +27,27 @@
 || #
 ||
 */
-#include "Key.h"
+#include "MyKey.h"
 
 
 // default constructor
-Key::Key() {
+MyKey::MyKey() {
 	kchar = NO_KEY;
 	kstate = IDLE;
 	stateChanged = false;
 }
 
 // constructor
-Key::Key(char userKeyChar) {
-	kchar = userKeyChar;
+MyKey::MyKey(char userMyKeyChar) {
+	kchar = userMyKeyChar;
 	kcode = -1;
 	kstate = IDLE;
 	stateChanged = false;
 }
 
 
-void Key::key_update (char userKeyChar, KeyState userState, boolean userStatus) {
-	kchar = userKeyChar;
+void MyKey::key_update (char userMyKeyChar, MyKeyState userState, boolean userStatus) {
+	kchar = userMyKeyChar;
 	kstate = userState;
 	stateChanged = userStatus;
 }
@@ -57,5 +57,6 @@ void Key::key_update (char userKeyChar, KeyState userState, boolean userStatus) 
 /*
 || @changelog
 || | 1.0 2012-06-04 - Mark Stanley : Initial Release
+|| | 1.1 2016-12-29 - Ethan Schwartz : Modify names from "Key" to "MyKey" to prevent conflicts
 || #
 */
