@@ -1,12 +1,12 @@
 /*
 ||
-|| @file Key.h
+|| @file MyKey.h
 || @version 1.0
 || @author Mark Stanley
 || @contact mstanley@technologist.com
 ||
 || @description
-|| | Key class provides an abstract definition of a key or button
+|| | MyKey class provides an abstract definition of a key or button
 || | and was initially designed to be used in conjunction with a
 || | state-machine.
 || #
@@ -29,8 +29,8 @@
 ||
 */
 
-#ifndef KEY_H
-#define KEY_H
+#ifndef MYKEY_H
+#define MYKEY_H
 
 #include "application.h"	// for digitalRead, digitalWrite, etc
 
@@ -38,22 +38,22 @@
 #define CLOSED HIGH
 
 typedef unsigned int uint;
-typedef enum{ IDLE, PRESSED, HOLD, RELEASED } KeyState;
+typedef enum{ IDLE, PRESSED, HOLD, RELEASED } MyKeyState;
 
 const char NO_KEY = '\0';
 
-class Key {
+class MyKey {
 public:
 	// members
 	char kchar;
 	int kcode;
-	KeyState kstate;
+	MyKeyState kstate;
 	boolean stateChanged;
 
 	// methods
-	Key();
-	Key(char userKeyChar);
-	void key_update(char userKeyChar, KeyState userState, boolean userStatus);
+	MyKey();
+	MyKey(char userMyKeyChar);
+	void key_update(char userMyKeyChar, MyKeyState userState, boolean userStatus);
 
 private:
 
@@ -64,5 +64,6 @@ private:
 /*
 || @changelog
 || | 1.0 2012-06-04 - Mark Stanley : Initial Release
+|| | 1.1 2016-12-29 - Ethan Schwartz : Modify Key to MyKey to prevent conflicts
 || #
 */
